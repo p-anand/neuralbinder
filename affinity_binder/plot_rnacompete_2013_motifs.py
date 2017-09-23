@@ -12,6 +12,7 @@ from __future__ import print_function
 
 import os, sys, h5py
 import numpy as np
+import matplotlib.pyplot as plt
 import tensorflow as tf
 
 sys.path.append('..')
@@ -31,7 +32,7 @@ ss_types = ['seq', 'pu']
 
 data_path = '../../data/RNAcompete_2013/rnacompete2013.h5'
 trained_path = '../../results/RNAcompete_2013'
-results_path = utils.make_directory('../../results/RNAcompete2013', 'motifs')
+results_path = utils.make_directory(trained_path, 'motifs')
 
 
 #---------------------------------------------------------------------------------------
