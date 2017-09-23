@@ -29,9 +29,10 @@ models = ['affinity_conv_net', 'affinity_residual_net', 'affinity_all_conv_net']
 normalize_method = 'log_norm'   # 'clip_norm'
 ss_types = ['seq', 'pu', 'struct']
 
-data_path = '../../data/RNAcompete_2013/rnacompete2013.h5'
-trained_path = '../../results/RNAcompete_2013'
-results_path = utils.make_directory('../../results/RNAcompete2013', 'saliency')
+
+data_path = '../../data/RNAcompete_2009/rnacompete2009.h5'
+trained_path = '../../results/RNAcompete_2009'
+results_path = utils.make_directory('../../results/RNAcompete2009', 'saliency')
 
 #---------------------------------------------------------------------------------------
 
