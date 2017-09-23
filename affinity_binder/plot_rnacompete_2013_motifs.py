@@ -50,7 +50,7 @@ def classifier_model(input_shape, output_shape, num_filters):
 			'activation': 'sigmoid',
 			'W': init.HeUniform(),
 			'padding': 'SAME',
-			'max_pool': 41,  
+			'global_pool': 'max',  
 			}
 	layer3 = {'layer': 'reshape',
 			  'reshape': [-1, num_filters],

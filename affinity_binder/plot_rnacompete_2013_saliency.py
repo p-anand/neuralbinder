@@ -13,10 +13,11 @@ from __future__ import print_function
 import os, sys, h5py
 import numpy as np
 import matplotlib.pyplot as plt
+from six.moves import cPickle
 import tensorflow as tf
 
 sys.path.append('..')
-import helper
+import helper, plot_helper
 from deepomics import neuralnetwork as nn
 from deepomics import utils, fit
 
@@ -98,7 +99,7 @@ for ss_type in ss_types:
 
 			# plot scatter plot of prediction and experiment
 			fig = plt.figure()
-			helper.scatter_plot(predictions, test['targets'], offset=0.3, alpha=0.4)
+			plot_helper.scatter_plot(predictions, test['targets'], offset=0.3, alpha=0.4)
 			outfile = os.path.join(rbp_path, experiment+'_scatter_performance.pdf')
 			fig.savefig(outfile, format='pdf', dpi=50, bbox_inches='tight', rasterized=True) 
 			plt.close()
@@ -113,22 +114,22 @@ for ss_type in ss_types:
 					 }
 
 			# plot top percentile saliency
-			top_indices = helper.get_percentile_indices(predictions[:,0], test['targets'][:,0], 99.9, 100.)
-			helper.plot_saliency_group(test, predictions, top_indices, params, rbp_path, 
+			top_indices = plot_helper.get_percentile_indices(predictions[:,0], test['targets'][:,0], 99.9, 100.)
+			plot_helper.plot_saliency_group(test, predictions, top_indices, params, rbp_path, 
 										name=experiment+'_top', ss_type=ss_type, num_plots=10)
 
-			middle_indices = helper.get_percentile_indices(predictions[:,0], test['targets'][:,0], 98, 98.5)
-			helper.plot_saliency_group(test, predictions, middle_indices, params, rbp_path, 
+			middle_indices = plot_helper.get_percentile_indices(predictions[:,0], test['targets'][:,0], 98, 98.5)
+			plot_helper.plot_saliency_group(test, predictions, middle_indices, params, rbp_path, 
 										name=experiment+'_high', ss_type=ss_type, num_plots=5)
 
-			low_indices = helper.get_percentile_indices(predictions[:,0], test['targets'][:,0], 85, 90)
-			helper.plot_saliency_group(test, predictions, low_indices, params, rbp_path, 
+			low_indices = plot_helper.get_percentile_indices(predictions[:,0], test['targets'][:,0], 85, 90)
+			plot_helper.plot_saliency_group(test, predictions, low_indices, params, rbp_path, 
 										name=experiment+'_middle', ss_type=ss_type, num_plots=5)
 
 
 			# plot scatter plot of prediction and experiment
 			fig = plt.figure()
-			helper.scatter_plot(predictions, test['targets'], offset=0.3, alpha=0.4)
+			plot_helper.scatter_plot(predictions, test['targets'], offset=0.3, alpha=0.4)
 			plt.scatter(predictions[top_indices,0], test['targets'][top_indices,0])
 			plt.scatter(predictions[middle_indices,0], test['targets'][middle_indices,0])
 			plt.scatter(predictions[low_indices,0], test['targets'][low_indices,0])

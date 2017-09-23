@@ -49,7 +49,7 @@ def classifier_model(input_shape, output_shape, num_filters):
 			'activation': 'sigmoid',
 			'W': init.HeUniform(),
 			'padding': 'SAME',
-			'max_pool': 39,
+			'global_pool': 'max',
 			}
 	layer3 = {'layer': 'reshape',
 			  'reshape': [-1, num_filters],
@@ -193,7 +193,7 @@ for ss_type in ss_types:
 				fmaps = nntrainer.get_activations(sess, data, layer='conv1d_0_active')
 				mean_fmap = np.squeeze(np.mean(fmaps, axis=0))
 				fig = plt.figure()
-				plt.plot(range(1,40), mean_fmap)
+				plt.plot(range(1,guided_saliency.shape[1]), mean_fmap)
 				plt.xticks()
 				labels = range(1, num_filters+2)
 				plt.legend(labels, fontsize=16, frameon=False, bbox_to_anchor=(1, 1))
