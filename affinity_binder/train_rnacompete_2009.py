@@ -72,7 +72,8 @@ for ss_type in ss_types:
 			# build neural network class
 			nnmodel = nn.NeuralNet(seed=247)
 			nnmodel.build_layers(model_layers, optimization)
-
+			nnmodel.inspect_layers()
+			
 			# compile neural trainer
 			file_path = os.path.join(model_path, rbp_name)
 			nntrainer = nn.NeuralTrainer(nnmodel, save='best', file_path=file_path)

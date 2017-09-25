@@ -29,9 +29,9 @@ num_epochs = 100
 batch_size = 100
 
 # different deep learning models to try out
-models = ['affinity_conv_net', 'affinity_residual_net', 'affinity_all_conv_net']
+models = [ 'affinity_conv_net', 'affinity_residual_net']#, 'affinity_all_conv_net']
 normalize_method = 'log_norm'   # 'clip_norm'
-ss_types = ['seq', 'pu', 'struct']
+ss_types = ['seq', 'pu']#, 'struct']
 
 data_path = '../../data/RNAcompete_2009/rnacompete2009.h5'
 results_path = helper.make_directory('../../results', 'RNAcompete_2009')
@@ -44,7 +44,7 @@ rbp_names = ['Fusip', 'HuR', 'PTB', 'RBM4', 'SF2', 'SLM2', 'U1A', 'VTS1', 'YB1']
 # loop over different secondary structure contexts
 for ss_type in ss_types:
     print('input data: ' + ss_type)
-    sstype_path = helper.make_directory(results_path, 'mixed_'+normalize_method+'_'+ss_type)
+    sstype_path = helper.make_directory(results_path, 'mixed2_'+normalize_method+'_'+ss_type)
 
     # loop over different models
     for model in models:
@@ -86,6 +86,7 @@ for ss_type in ss_types:
             # build neural network class
             nnmodel = nn.NeuralNet(seed=247)
             nnmodel.build_layers(model_layers, optimization)
+            nnmodel.inspect_layers()
 
             # compile neural trainer
             file_path = os.path.join(model_path, rbp_name)
