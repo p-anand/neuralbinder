@@ -12,8 +12,8 @@ from __future__ import print_function
 
 import os, sys, h5py
 import numpy as np
-from six.moves import cPickle
 import tensorflow as tf
+from six.moves import cPickle
 
 sys.path.append('..')
 import helper
@@ -22,6 +22,8 @@ from deepomics import utils, fit
 
 #---------------------------------------------------------------------------------------
 
+valid_frac = 0.1
+test_frac = 0.25
 num_epochs = 100
 batch_size = 100
 
@@ -42,7 +44,7 @@ rbp_names = ['Fusip', 'HuR', 'PTB', 'RBM4', 'SF2', 'SLM2', 'U1A', 'VTS1', 'YB1']
 all_results = {}
 for ss_type in ss_types:
 	print('input data: ' + ss_type)
-	sstype_path = helper.make_directory(results_path, normalize_method+'_'+ss_type)
+	sstype_path = helper.make_directory(results_path, 'mixed_'+normalize_method+'_'+ss_type)
 
 	# loop over different models
 	for model in models:
@@ -62,6 +64,16 @@ for ss_type in ss_types:
 
 			# process rbp dataset
 			train, valid, test = helper.process_data(train, valid, test, method=normalize_method)
+
+			# shuffle set A and set B and then separate into training and test sequences
+			inputs = np.vstack([train['inputs'], valid['inputs'], test['inputs']])
+			targets = np.vstack([train['targets'], valid['targets'], test['targets']])
+			num_data = targets.shape[0]
+			shuffle = np.random.permutation(num_data)
+			index = (np.cumsum([0, 1-valid_frac-test_frac, valid_frac, test_frac])*num_data).astype(int)
+			train = {'inputs': inputs[index[0]:index[1]], 'targets': targets[index[0]:index[1]]}
+			valid = {'inputs': inputs[index[1]:index[2]], 'targets': targets[index[1]:index[2]]}
+			test = {'inputs': inputs[index[2]:index[3]], 'targets': targets[index[2]:index[3]]}
 
 			# get shapes
 			input_shape = list(train['inputs'].shape)
@@ -87,7 +99,7 @@ for ss_type in ss_types:
 			nntrainer.set_best_parameters(sess)
 
 			# test model on validation set
-			loss, mean_vals, std_vals = nntrainer.test_model(sess, valid, batch_size=128, name='test', verbose=1)
+			loss, mean_vals, std_vals = nntrainer.test_model(sess, test, batch_size=128, name='test', verbose=1)
 
 			# store the Pearson correlation coefficient
 			results.append(mean_vals[0])
@@ -95,5 +107,5 @@ for ss_type in ss_types:
 			sess.close()
 
 		# save results
-		with open(os.path.join(model_path, 'validation_scores.pickle'), 'wb') as f:
+		with open(os.path.join(model_path, 'test_scores.pickle'), 'wb') as f:
 			cPickle.dump(np.array(results), f, protocol=cPickle.HIGHEST_PROTOCOL)

@@ -13,6 +13,7 @@ from __future__ import print_function
 import os, sys, h5py
 import numpy as np
 import tensorflow as tf
+from six.moves import cPickle
 
 sys.path.append('..')
 import helper
