@@ -6,18 +6,18 @@ def model(input_shape, output_shape):
             }
     layer2 = {'layer': 'conv1d',
             'num_filters': 32,
-            'filter_size': 19, # 100
+            'filter_size': 19, # 200
             'norm': 'batch',
-            'activation': 'leaky_relu',
-            'dropout': 0.2,
+            'activation': 'relu',
+            'dropout': 0.1,
             'padding': 'SAME',
-            'max_pool': 25,  # 5
+            'mean_pool': 40,  # 5
             }
     layer3 = {'layer': 'conv1d',
             'num_filters': 128,
             'filter_size': 5,
             'norm': 'batch',
-            'activation': 'leaky_relu',
+            'activation': 'relu',
             'dropout': 0.5,
             'padding': 'VALID',
             }

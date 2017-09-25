@@ -70,9 +70,9 @@ for ss_type in ss_types:
             num_data = targets.shape[0]
             shuffle = np.random.permutation(num_data)
             index = (np.cumsum([0, 1-valid_frac-test_frac, valid_frac, test_frac])*num_data).astype(int)
-            train = {'inputs': inputs[index[0]:index[1]], 'targets': targets[index[0]:index[1]]}
-            valid = {'inputs': inputs[index[1]:index[2]], 'targets': targets[index[1]:index[2]]}
-            test = {'inputs': inputs[index[2]:index[3]], 'targets': targets[index[2]:index[3]]}
+            train = {'inputs': inputs[shuffle[index[0]:index[1]]], 'targets': targets[shuffle[index[0]:index[1]]]}
+            valid = {'inputs': inputs[shuffle[index[1]:index[2]]], 'targets': targets[shuffle[index[1]:index[2]]]}
+            test = {'inputs': inputs[shuffle[index[2]:index[3]]], 'targets': targets[shuffle[index[2]:index[3]]]}
 
             # get shapes
             input_shape = list(train['inputs'].shape)

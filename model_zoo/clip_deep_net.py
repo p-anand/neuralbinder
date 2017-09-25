@@ -58,6 +58,7 @@ def model(input_shape, output_shape):
                   "optimizer": "adam",
                   "learning_rate": 0.001,
                   "l2": 1e-6,
+                  "label_smoothing": 0.05,
                   #"l1": 1e-6,
                   }
     return model_layers, optimization
