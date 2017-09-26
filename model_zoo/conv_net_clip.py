@@ -1,4 +1,4 @@
-24def model(input_shape, output_shape):
+def model(input_shape, output_shape):
 
     # create model
     layer1 = {'layer': 'input', #41
@@ -18,22 +18,22 @@
             'filter_size': 3,
             'norm': 'batch',
             'activation': 'leaky_relu',
-            'dropout': 0.4,
+            'dropout': 0.5,
             'padding': 'VALID',
             }
     layer4 = {'layer': 'dense',
             'num_units': output_shape[1],
-            'activation': 'linear'
+            'activation': 'sigmoid'
             }
 
     #from tfomics import build_network
     model_layers = [layer1, layer2, layer3, layer4]
 
     # optimization parameters
-    optimization = {"objective": "squared_error",
+    optimization = {"objective": "binary",
                   "optimizer": "adam",
-                  "learning_rate": 0.001,
-                  "l2": 1e-6,
+                  "learning_rate": 0.0001,
+                  "l2": 1e-5,
                   #"l1": 0.1,
                   }
     return model_layers, optimization

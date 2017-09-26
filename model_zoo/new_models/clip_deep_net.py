@@ -19,7 +19,7 @@ def model(input_shape, output_shape):
             'activation': 'relu',
             'dropout': 0.2,
             'padding': 'SAME',
-            'max_pool': 10,    # 20
+            'max_pool': 5,    # 20
             }
     layer4 = {'layer': 'conv1d',
             'num_filters': 64,
@@ -56,9 +56,9 @@ def model(input_shape, output_shape):
     # optimization parameters
     optimization = {"objective": "binary",
                   "optimizer": "adam",
-                  "learning_rate": 0.0001,
-                  "l2": 1e-5,
-                  #"label_smoothing": 0.05,
+                  "learning_rate": 0.001,
+                  "l2": 1e-6,
+                  "label_smoothing": 0.05,
                   #"l1": 1e-6,
                   }
     return model_layers, optimization

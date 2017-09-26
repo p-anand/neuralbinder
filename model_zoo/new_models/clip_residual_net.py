@@ -5,41 +5,37 @@ def model(input_shape, output_shape):
             'input_shape': input_shape
             }
     layer2 = {'layer': 'conv1d',
-            'num_filters': 32,
-            'filter_size': 19, #
-            'norm': 'batch',
-            'activation': 'relu',
-            'dropout': 0.1,
-            'padding': 'SAME',
-            }
-    layer3 = {'layer': 'conv1d',
-            'num_filters': 48,
-            'filter_size': 7,
+            'num_filters': 64,
+            'filter_size': 13, # 200
             'norm': 'batch',
             'activation': 'relu',
             'dropout': 0.2,
             'padding': 'SAME',
-            'max_pool': 10,    # 20
+            }
+    layer3 = {'layer': 'conv1d_residual',
+            'filter_size': 5,
+            'function': 'relu',
+            'dropout_block': 0.1,
+            'dropout': 0.3,
+            'mean_pool': 10,
             }
     layer4 = {'layer': 'conv1d',
-            'num_filters': 64,
+            'num_filters': 128,
             'filter_size': 5, # 20
             'norm': 'batch',
             'activation': 'relu',
-            'dropout': 0.3,
+            'dropout': 0.2,
             'padding': 'SAME',
             }
-    layer5 = {'layer': 'conv1d',
-            'num_filters': 96,
-            'filter_size': 5, # 20
-            'norm': 'batch',
-            'activation': 'relu',
-            'dropout': 0.4,
-            'padding': 'SAME',
-            'max_pool': 5,
+    layer5 = {'layer': 'conv1d_residual',
+            'filter_size': 5,
+            'function': 'relu',
+            'dropout_block': 0.1,
+            'dropout': 0.3,
+            'max_pool': 5, # 4
             }
     layer6 = {'layer': 'conv1d',
-            'num_filters': 128,
+            'num_filters': 256,
             'filter_size': 4, # 20
             'norm': 'batch',
             'activation': 'relu',
@@ -56,9 +52,9 @@ def model(input_shape, output_shape):
     # optimization parameters
     optimization = {"objective": "binary",
                   "optimizer": "adam",
-                  "learning_rate": 0.0001,
-                  "l2": 1e-5,
-                  #"label_smoothing": 0.05,
+                  "learning_rate": 0.001,
+                  "l2": 1e-6,
+                  "label_smoothing": 0.05,
                   #"l1": 1e-6,
                   }
     return model_layers, optimization

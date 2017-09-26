@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import os, sys, h5py
 import numpy as np
-
+from six.moves import cPickle
 
 def import_model(model):
 	""" import models by model name """
@@ -262,10 +262,18 @@ def dataset_keys_hdf5(file_path):
 
 	return np.array(keys)
 
+
 def get_experiments_hdf5(file_path):
 	dataset = h5py.File(file_path, 'r')
 	return np.array(dataset['experiment'])
 
+
+def get_file_names(dataset_path):
+    file_names = []
+    for file_name in os.listdir(dataset_path):
+        if os.path.splitext(file_name)[1] == '.h5':
+            file_names.append(file_name)
+    return file_names
 
 
 def get_clip_indices(pwm, threshold=0.2, window=2):
@@ -292,3 +300,30 @@ def get_clip_indices(pwm, threshold=0.2, window=2):
 		start = 0
 		end = num_seq
 	return start, end
+
+
+def load_coordinates(coordinate_path, name='test'):
+    with open(coordinate_path, 'rb') as f:
+        train_coords = cPickle.load(f)
+        valid_coords = cPickle.load(f)
+        test_coords = cPickle.load(f)
+
+    if name == 'train':
+        chrom = train_coords[0]
+        start = train_coords[1]
+        end = train_coords[2]
+        strand_info = train_coords[3]
+    elif name == 'valid':
+        chrom = valid_coords[0]
+        start = valid_coords[1]
+        end = valid_coords[2]
+        strand_info = valid_coords[3]
+    elif name == 'test':
+        chrom = test_coords[0]
+        start = test_coords[1]
+        end = test_coords[2]
+        strand_info = test_coords[3]
+    return chrom, start, end, strand_info
+
+
+

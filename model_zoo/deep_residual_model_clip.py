@@ -1,5 +1,4 @@
 def model(input_shape, output_shape):
-
     # create model
     layer1 = {'layer': 'input', #41
             'input_shape': input_shape
@@ -29,14 +28,14 @@ def model(input_shape, output_shape):
             }
     layer5 = {'layer': 'dense', 
             'num_units': output_shape[1],
-            'activation': 'linear'
+            'activation': 'sigmoid'
             }
 
     #from tfomics import build_network
     model_layers = [layer1, layer2, layer3, layer4, layer5]
     
     # optimization parameters
-    optimization = {"objective": "squared_error",
+    optimization = {"objective": "binary",
                   "optimizer": "adam",
                   "learning_rate": 0.001, 
                   "l2": 1e-6,
