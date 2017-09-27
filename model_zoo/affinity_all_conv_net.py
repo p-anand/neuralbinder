@@ -1,12 +1,18 @@
 def model(input_shape, output_shape):
 
+    if input_shape[1] == 41:
+        filter_size = 11
+    else:
+        filter_size = 9
+    print(filter_size)
+
     # create model
     layer1 = {'layer': 'input', #41
             'input_shape': input_shape
             }
     layer2 = {'layer': 'conv1d', 
             'num_filters': 16, 
-            'filter_size': 11,  # 32
+            'filter_size': filter_size,  # 32
             'strides': 1,  # 16
             'padding': 'SAME',
             'norm': 'batch',
