@@ -25,8 +25,8 @@ from deepomics import utils
 # different deep learning models to try out
 old_models = ['conv_net', 'deep_residual_model', 'all_conv_net']
 new_models = ['affinity_conv_net', 'affinity_residual_net', 'affinity_all_conv_net']
-ss_types = ['seq'] #, 'pu', 'struct']
-normalize_method = 'clip_norm' #'log_norm'   # 'clip_norm'
+ss_types = ['struct'] # ['seq', 'pu', 'struct']
+normalize_method = 'log_norm' #'log_norm'   # 'clip_norm'
 
 data_path = '../../data/RNAcompete_2013/rnacompete2013.h5'
 old_results_path = os.path.join('../../results', 'RNAcompete_2013_original')
@@ -65,6 +65,7 @@ for ss_type in ss_types:
 
 				# process rbp dataset
 				train, valid, test = helper.process_data(train, valid, test, method=normalize_method)
+				print(train['inputs'].shape)
 
 				# get shapes
 				input_shape = list(train['inputs'].shape)
@@ -102,6 +103,7 @@ for ss_type in ss_types:
 				nnmodel.save_model_parameters(sess, file_path=new_file_path)
 
 				sess.close()
+				
 			except:
 				with open('redo2.txt', 'a') as f:
 					f.write(str(rbp_index)+' '+model+' '+ss_type+'\n')

@@ -42,7 +42,7 @@ def load_dataset_hdf5(file_path, dataset_name=None, ss_type='seq', rbp_index=Non
 			unpaired = np.expand_dims(np.sum(structure[:,:,:,1:], axis=3), axis=3)
 			seq = np.concatenate([seq, paired, unpaired], axis=3)
 		
-		elif ss_type == 'all':    
+		elif ss_type == 'struct':    
 			structure = train['inputs'][:,:,:,4:9]
 			paired = np.expand_dims(structure[:,:,:,0], axis=3)
 			HIME = structure[:,:,:,1:]
@@ -269,11 +269,11 @@ def get_experiments_hdf5(file_path):
 
 
 def get_file_names(dataset_path):
-    file_names = []
-    for file_name in os.listdir(dataset_path):
-        if os.path.splitext(file_name)[1] == '.h5':
-            file_names.append(file_name)
-    return file_names
+	file_names = []
+	for file_name in os.listdir(dataset_path):
+		if os.path.splitext(file_name)[1] == '.h5':
+			file_names.append(file_name)
+	return file_names
 
 
 def get_clip_indices(pwm, threshold=0.2, window=2):
@@ -303,27 +303,27 @@ def get_clip_indices(pwm, threshold=0.2, window=2):
 
 
 def load_coordinates(coordinate_path, name='test'):
-    with open(coordinate_path, 'rb') as f:
-        train_coords = cPickle.load(f)
-        valid_coords = cPickle.load(f)
-        test_coords = cPickle.load(f)
+	with open(coordinate_path, 'rb') as f:
+		train_coords = cPickle.load(f)
+		valid_coords = cPickle.load(f)
+		test_coords = cPickle.load(f)
 
-    if name == 'train':
-        chrom = train_coords[0]
-        start = train_coords[1]
-        end = train_coords[2]
-        strand_info = train_coords[3]
-    elif name == 'valid':
-        chrom = valid_coords[0]
-        start = valid_coords[1]
-        end = valid_coords[2]
-        strand_info = valid_coords[3]
-    elif name == 'test':
-        chrom = test_coords[0]
-        start = test_coords[1]
-        end = test_coords[2]
-        strand_info = test_coords[3]
-    return chrom, start, end, strand_info
+	if name == 'train':
+		chrom = train_coords[0]
+		start = train_coords[1]
+		end = train_coords[2]
+		strand_info = train_coords[3]
+	elif name == 'valid':
+		chrom = valid_coords[0]
+		start = valid_coords[1]
+		end = valid_coords[2]
+		strand_info = valid_coords[3]
+	elif name == 'test':
+		chrom = test_coords[0]
+		start = test_coords[1]
+		end = test_coords[2]
+		strand_info = test_coords[3]
+	return chrom, start, end, strand_info
 
 
 

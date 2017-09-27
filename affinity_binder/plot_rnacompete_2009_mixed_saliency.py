@@ -31,7 +31,7 @@ batch_size = 100
 # different deep learning models to try out
 models = ['affinity_conv_net', 'affinity_residual_net', 'affinity_all_conv_net']
 normalize_method = 'log_norm'   # 'clip_norm'
-ss_types = ['seq', 'pu', 'struct']
+ss_types = ['seq', 'pu']
 
 
 data_path = '../../data/RNAcompete_2009/rnacompete2009.h5'

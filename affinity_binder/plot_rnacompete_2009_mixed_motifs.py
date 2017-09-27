@@ -22,8 +22,6 @@ from deepomics import utils, fit, metrics, saliency, visualize, init
 
 #---------------------------------------------------------------------------------------
 
-valid_frac = 0.1
-test_frac = 0.25
 num_saliencies = [200, 500]
 num_filters = 5
 
@@ -35,6 +33,7 @@ ss_types = ['seq', 'pu']
 data_path = '../../data/RNAcompete_2009/rnacompete2009.h5'
 trained_path = '../../results/RNAcompete_2009'
 results_path = utils.make_directory(trained_path, 'mixed_motifs')
+
 
 #---------------------------------------------------------------------------------------
 # classifier model
@@ -85,7 +84,7 @@ for ss_type in ss_types:
   	sstype_path = helper.make_directory(trained_path, 'mixed_'+normalize_method+'_'+ss_type)
 
 	# directory to save parameters of saliency
-	saliency_sstype_path = helper.make_directory(results_path, 'mixed_'+normalize_method+'_'+ss_type)
+	classifier_sstype_path = helper.make_directory(results_path, 'mixed_'+normalize_method+'_'+ss_type)
 
 	# loop over different models
 	for model in models:
@@ -106,16 +105,6 @@ for ss_type in ss_types:
 
 			# process rbp dataset
 			train, valid, test = helper.process_data(train, valid, test, method=normalize_method)
-
-			# shuffle set A and set B and then separate into training and test sequences
-			inputs = np.vstack([train['inputs'], valid['inputs'], test['inputs']])
-			targets = np.vstack([train['targets'], valid['targets'], test['targets']])
-			num_data = targets.shape[0]
-			shuffle = np.random.permutation(num_data)
-			index = (np.cumsum([0, 1-valid_frac-test_frac, valid_frac, test_frac])*num_data).astype(int)
-			train = {'inputs': inputs[index[0]:index[1]], 'targets': targets[index[0]:index[1]]}
-			valid = {'inputs': inputs[index[1]:index[2]], 'targets': targets[index[1]:index[2]]}
-			test = {'inputs': inputs[index[2]:index[3]], 'targets': targets[index[2]:index[3]]}
 
 			# get shapes
 			input_shape = list(train['inputs'].shape)
@@ -170,7 +159,7 @@ for ss_type in ss_types:
 				# shuffle saliency for background data
 				background = []
 				for i in range(num_saliency):
-					shuffle = np.random.permutation(39)
+					shuffle = np.random.permutation(input_shape[1])
 					background.append([guided_saliency[i,shuffle,:,:]])
 				background = np.vstack(background)
 
@@ -186,6 +175,7 @@ for ss_type in ss_types:
 				# build neural network class
 				nnmodel = nn.NeuralNet(seed=247)
 				nnmodel.build_layers(model_layers, optimization)
+				nnmodel.inspect_layers()
 
 				# compile neural trainer
 				classifier_path = os.path.join(params_path, 'saliency_classifier_'+str(num_saliency))
@@ -205,7 +195,7 @@ for ss_type in ss_types:
 				fmaps = nntrainer.get_activations(sess, data, layer='conv1d_0_active')
 				mean_fmap = np.squeeze(np.mean(fmaps, axis=0))
 				fig = plt.figure()
-				plt.plot(range(1,guided_saliency.shape[1]), mean_fmap)
+				plt.plot(range(1,guided_saliency.shape[1]+1), mean_fmap)
 				plt.xticks()
 				labels = range(1, num_filters+2)
 				plt.legend(labels, fontsize=16, frameon=False, bbox_to_anchor=(1, 1))
@@ -276,3 +266,5 @@ for ss_type in ss_types:
 					plt.figure()
 					plt = visualize.filter_heatmap(np.squeeze(W[:,:,:,i].T), norm=None, cmap='seismic', cbar_norm=False)
 				"""
+
+

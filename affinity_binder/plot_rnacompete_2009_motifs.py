@@ -40,7 +40,7 @@ results_path = utils.make_directory(trained_path, 'motifs')
 def classifier_model(input_shape, output_shape, num_filters):
 
 	# create model
-	layer1 = {'layer': 'input', #41
+	layer1 = {'layer': 'input', 
 			'input_shape': input_shape
 			}
 	layer2 = {'layer': 'conv1d',
@@ -158,7 +158,7 @@ for ss_type in ss_types:
 				# shuffle saliency for background data
 				background = []
 				for i in range(num_saliency):
-					shuffle = np.random.permutation(39)
+					shuffle = np.random.permutation(X.shape[1])
 					background.append([guided_saliency[i,shuffle,:,:]])
 				background = np.vstack(background)
 
@@ -174,6 +174,7 @@ for ss_type in ss_types:
 				# build neural network class
 				nnmodel = nn.NeuralNet(seed=247)
 				nnmodel.build_layers(model_layers, optimization)
+				nnmodel.inspect_layers()
 
 				# compile neural trainer
 				classifier_path = os.path.join(params_path, 'saliency_classifier_'+str(num_saliency))
@@ -193,7 +194,7 @@ for ss_type in ss_types:
 				fmaps = nntrainer.get_activations(sess, data, layer='conv1d_0_active')
 				mean_fmap = np.squeeze(np.mean(fmaps, axis=0))
 				fig = plt.figure()
-				plt.plot(range(1,guided_saliency.shape[1]), mean_fmap)
+				plt.plot(range(1,guided_saliency.shape[1]+1), mean_fmap)
 				plt.xticks()
 				labels = range(1, num_filters+2)
 				plt.legend(labels, fontsize=16, frameon=False, bbox_to_anchor=(1, 1))
