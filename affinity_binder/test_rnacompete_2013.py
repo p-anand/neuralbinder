@@ -27,8 +27,8 @@ batch_size = 100
 
 # different deep learning models to try out
 models = ['affinity_conv_net', 'affinity_residual_net', 'affinity_all_conv_net']
-normalize_method = 'clip_norm'   # 'clip_norm' 'log_norm'
-ss_types = ['seq']#, 'pu', 'struct']
+normalize_method = 'log_norm'   # 'clip_norm' 'log_norm'
+ss_types = ['seq', 'pu', 'struct']
 
 data_path = '../../data/RNAcompete_2013/rnacompete2013.h5'
 results_path = helper.make_directory('../../results', 'RNAcompete_2013')

@@ -25,7 +25,7 @@ from deepomics import utils, fit
 valid_frac = 0.1
 test_frac = 0.25
 
-num_epochs = 100
+num_epochs = 200
 batch_size = 100
 
 # different deep learning models to try out
@@ -55,8 +55,8 @@ for ss_type in ss_types:
         for rbp_name in rbp_names:
             print('Analyzing: '+ rbp_name)
             tf.reset_default_graph() # reset any tensorflow graphs
-            np.random.seed(247) # for reproducibilitjy
-            tf.set_random_seed(247) # for reproducibility
+            np.random.seed(512) # for reproducibilitjy
+            tf.set_random_seed(512) # for reproducibility
 
             # load rbp dataset
             train, valid, test = helper.load_dataset_hdf5(data_path, dataset_name=rbp_name, ss_type=ss_type)
@@ -84,7 +84,7 @@ for ss_type in ss_types:
             model_layers, optimization = genome_model.model(input_shape, output_shape)
 
             # build neural network class
-            nnmodel = nn.NeuralNet(seed=247)
+            nnmodel = nn.NeuralNet(seed=512)
             nnmodel.build_layers(model_layers, optimization)
             nnmodel.inspect_layers()
 

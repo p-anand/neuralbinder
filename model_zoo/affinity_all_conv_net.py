@@ -6,7 +6,7 @@ def model(input_shape, output_shape):
             }
     layer2 = {'layer': 'conv1d',
             'num_filters': 16,
-            'filter_size': input_shape[1]-29,  # 32
+            'filter_size': input_shape[1]-30,  # 32
             'strides': 1,  # 16
             'padding': 'SAME',
             'norm': 'batch',

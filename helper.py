@@ -5,6 +5,9 @@ from __future__ import print_function
 import os, sys, h5py
 import numpy as np
 from six.moves import cPickle
+from deepomics import neuralnetwork as nn
+from deepomics import utils, saliency
+
 
 def import_model(model):
 	""" import models by model name """
@@ -326,4 +329,61 @@ def load_coordinates(coordinate_path, name='test'):
 	return chrom, start, end, strand_info
 
 
+
+def ensemble_predictions(test, rbp_name, models, input_shape, output_shape, best_path, use_scope=True):
+	predictions = []
+	for model in models:
+
+
+		# load model
+		genome_model = import_model(model)
+		model_layers, optimization = genome_model.model(input_shape, output_shape)
+
+		# build neural network class
+		nnmodel = nn.NeuralNet(seed=247)
+		nnmodel.build_layers(model_layers, optimization, use_scope=use_scope)
+
+		file_path = os.path.join(best_path, model, rbp_name)
+		nntrainer = nn.NeuralTrainer(nnmodel, save='best', file_path=file_path)
+
+		# initialize session
+		sess = utils.initialize_session(nnmodel.placeholders)
+
+		# load best model
+		nntrainer.set_best_parameters(sess, verbose=0)
+
+		predictions.append(nntrainer.get_activations(sess, test))
+
+	predictions = np.hstack(predictions)
+	ensemble_predictions = np.mean(predictions,axis=1)
+	return ensemble_predictions, predictions
+
+
+
+def ensemble_saliency(X, models, best_path, rbp_name, input_shape, output_shape, use_scope=True):
+
+	guided_saliency = []
+	for model in models:
+		# load model
+		genome_model = import_model(model)
+		model_layers, optimization = genome_model.model(input_shape, output_shape)
+
+		# parameters for saliency analysis
+		params = {'input_shape': input_shape,
+				  'output_shape': output_shape,
+				 'genome_model': genome_model.model, 
+				 'model_path': os.path.join(best_path, model, rbp_name+'_best.ckpt'),
+				 'optimization': optimization,
+				 'use_scope': use_scope
+				 }				  
+		# guided backprop saliency
+		guided_saliency.append(saliency.guided_backprop(X, layer='output', class_index=0, params=params))
+
+	for i in range(len(guided_saliency)):
+		for j in range(len(models)):
+			MAX = np.max(guided_saliency[j][i])
+			guided_saliency[j][i] = guided_saliency[j][i]/MAX
+	guided_saliency = np.array(guided_saliency)
+	mean_saliency = np.mean(guided_saliency, axis=0)
+	return mean_saliency, guided_saliency
 
