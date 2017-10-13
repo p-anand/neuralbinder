@@ -24,8 +24,8 @@ def import_model(model):
 	elif model == 'clip_conv_net':
 		from model_zoo import clip_conv_net as genome_model
 
-	elif model == 'clip_deep_net':
-		from model_zoo import clip_deep_net as genome_model
+	elif model == 'clip_all_conv_net':
+		from model_zoo import clip_all_conv_net as genome_model
 
 	elif model == 'clip_residual_net':
 		from model_zoo import clip_residual_net as genome_model
@@ -68,10 +68,9 @@ def load_dataset_hdf5(file_path, dataset_name=None, ss_type='seq', rbp_index=Non
 
 		# expand dims of targets
 		if rbp_index is not None:
-			Y_train = np.expand_dims(Y_train[:,rbp_index], axis=1)
-			Y_valid = np.expand_dims(Y_valid[:,rbp_index], axis=1)
-			Y_test = np.expand_dims(Y_test[:,rbp_index], axis=1)
-
+			Y_train = Y_train[:,rbp_index]
+			Y_valid = Y_valid[:,rbp_index]
+			Y_test = Y_test[:,rbp_index]
 	else:
 		X_train = np.array(dataset['/'+dataset_name+'/X_train']).astype(np.float32)        
 		Y_train = np.array(dataset['/'+dataset_name+'/Y_train']).astype(np.float32)
@@ -79,12 +78,12 @@ def load_dataset_hdf5(file_path, dataset_name=None, ss_type='seq', rbp_index=Non
 		Y_valid = np.array(dataset['/'+dataset_name+'/Y_valid']).astype(np.float32)
 		X_test = np.array(dataset['/'+dataset_name+'/X_test']).astype(np.float32)
 		Y_test = np.array(dataset['/'+dataset_name+'/Y_test']).astype(np.float32)
-		
-		# expand dims of targets
-		if len(Y_train.shape) == 1:
-			Y_train = np.expand_dims(Y_train, axis=1)
-			Y_valid = np.expand_dims(Y_valid, axis=1)
-			Y_test = np.expand_dims(Y_test, axis=1)
+	
+	# expand dims of targets
+	if len(Y_train.shape) == 1:
+		Y_train = np.expand_dims(Y_train, axis=1)
+		Y_valid = np.expand_dims(Y_valid, axis=1)
+		Y_test = np.expand_dims(Y_test, axis=1)
 
 	# add another dimension to make a 4d tensor
 	X_train = np.expand_dims(X_train, axis=3).transpose([0, 2, 3, 1])
@@ -330,6 +329,7 @@ def load_coordinates(coordinate_path, name='test'):
 
 
 
+
 def ensemble_predictions(test, rbp_name, models, input_shape, output_shape, best_path, use_scope=True):
 	predictions = []
 	for model in models:
@@ -359,6 +359,35 @@ def ensemble_predictions(test, rbp_name, models, input_shape, output_shape, best
 	return ensemble_predictions, predictions
 
 
+def ensemble_clip_predictions(test, rbp_name, models, input_shape, output_shape, best_path, use_scope=True):
+	predictions = []
+	for model in models:
+
+
+		# load model
+		genome_model = import_model(model)
+		model_layers, optimization = genome_model.model(input_shape, output_shape)
+
+		# build neural network class
+		nnmodel = nn.NeuralNet(seed=247)
+		nnmodel.build_layers(model_layers, optimization, use_scope=use_scope)
+
+		file_path = os.path.join(best_path, rbp_name)
+		nntrainer = nn.NeuralTrainer(nnmodel, save='best', file_path=file_path)
+
+		# initialize session
+		sess = utils.initialize_session(nnmodel.placeholders)
+
+		# load best model
+		nntrainer.set_best_parameters(sess, verbose=0)
+
+		predictions.append(nntrainer.get_activations(sess, test))
+
+	predictions = np.hstack(predictions)
+	ensemble_predictions = np.mean(predictions,axis=1)
+	return ensemble_predictions, predictions
+
+
 
 def ensemble_saliency(X, models, best_path, rbp_name, input_shape, output_shape, use_scope=True):
 
@@ -373,6 +402,35 @@ def ensemble_saliency(X, models, best_path, rbp_name, input_shape, output_shape,
 				  'output_shape': output_shape,
 				 'genome_model': genome_model.model, 
 				 'model_path': os.path.join(best_path, model, rbp_name+'_best.ckpt'),
+				 'optimization': optimization,
+				 'use_scope': use_scope
+				 }				  
+		# guided backprop saliency
+		guided_saliency.append(saliency.guided_backprop(X, layer='output', class_index=0, params=params))
+
+	for i in range(len(guided_saliency)):
+		for j in range(len(models)):
+			MAX = np.max(guided_saliency[j][i])
+			guided_saliency[j][i] = guided_saliency[j][i]/MAX
+	guided_saliency = np.array(guided_saliency)
+	mean_saliency = np.mean(guided_saliency, axis=0)
+	return mean_saliency, guided_saliency
+
+
+
+def ensemble_clip_saliency(X, models, best_path, rbp_name, input_shape, output_shape, use_scope=True):
+
+	guided_saliency = []
+	for model in models:
+		# load model
+		genome_model = import_model(model)
+		model_layers, optimization = genome_model.model(input_shape, output_shape)
+
+		# parameters for saliency analysis
+		params = {'input_shape': input_shape,
+				  'output_shape': output_shape,
+				 'genome_model': genome_model.model, 
+				 'model_path': os.path.join(best_path, rbp_name+'_best.ckpt'),
 				 'optimization': optimization,
 				 'use_scope': use_scope
 				 }				  

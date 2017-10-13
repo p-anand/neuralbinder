@@ -25,7 +25,7 @@ def plot_ensemble_saliency_group(test, predictions, top_indices, models, best_pa
 	X = test['inputs'][plot_indices]
 	y = test['targets'][plot_indices,0]
 	p = predictions[plot_indices]
-	
+
 	input_shape = list(test['inputs'].shape)
 	input_shape[0] = None
 	output_shape = test['targets'].shape
@@ -41,14 +41,14 @@ def plot_ensemble_saliency_group(test, predictions, top_indices, models, best_pa
 				visualize.plot_seq_pos_saliency(np.squeeze(X[i]).T, np.squeeze(guided_saliency[j][i]).T, alphabet='rna')
 				output_name = models[j]+'_'+rbp_name+'_'+addon+'_{:.2f}'.format(p[i]) + '_' + '{:.2f}'.format(y[i])
 				outfile = os.path.join(plot_path, output_name+'.pdf')
-				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 				plt.close()
 
 			fig = plt.figure()
 			visualize.plot_seq_pos_saliency(np.squeeze(X[i]).T, np.squeeze(mean_saliency[i]).T, alphabet='rna')
 			output_name = 'ensemble_'+rbp_name+'_'+addon+'_{:.2f}'.format(p[i]) + '_' + '{:.2f}'.format(y[i])
 			outfile = os.path.join(plot_path, output_name+'.pdf')
-			fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+			fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 			plt.close()
 
 		else:
@@ -58,16 +58,16 @@ def plot_ensemble_saliency_group(test, predictions, top_indices, models, best_pa
 				visualize.plot_seq_struct_saliency(np.squeeze(X[i]).T, np.squeeze(guided_saliency[j][i]).T)
 				output_name = models[j] +'_'+rbp_name+'_'+addon+'_{:.2f}'.format(p[i]) + '_' + '{:.2f}'.format(y[i])
 				outfile = os.path.join(plot_path, output_name+'.pdf')
-				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 				plt.close()
 
 			fig = plt.figure()
 			visualize.plot_seq_struct_saliency(np.squeeze(X[i]).T, np.squeeze(mean_saliency[i]).T)
 			output_name = 'ensemble_'+rbp_name+'_'+addon+'_{:.2f}'.format(p[i]) + '_' + '{:.2f}'.format(y[i])
 			outfile = os.path.join(plot_path, output_name+'.pdf')
-			fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+			fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 			plt.close()
-		
+
 
 
 def plot_saliency_group(test, predictions, top_indices, params, plot_path, name, ss_type='seq', num_plots=5):
@@ -83,13 +83,13 @@ def plot_saliency_group(test, predictions, top_indices, params, plot_path, name,
 
 	guided_saliency = saliency.guided_backprop(X, layer='output', class_index=0, params=params)
 	if guided_saliency.any():
-		for i, index in enumerate(plot_indices):			
+		for i, index in enumerate(plot_indices):
 			if ss_type == 'seq':
 				fig = plt.figure(figsize=(10,10))
 				visualize.plot_seq_pos_saliency(np.squeeze(X[i]).T, np.squeeze(guided_saliency[i]).T, alphabet='rna')
 				output_name = name+'_{:.2f}'.format(p[i]) + '_' + '{:.2f}'.format(y[i])
 				outfile = os.path.join(plot_path, output_name+'.pdf')
-				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 				plt.close()
 
 			else:
@@ -97,9 +97,9 @@ def plot_saliency_group(test, predictions, top_indices, params, plot_path, name,
 				visualize.plot_seq_struct_saliency(np.squeeze(X[i]).T, np.squeeze(guided_saliency[i]).T)
 				output_name = name+'_{:.2f}'.format(p[i]) + '_' + '{:.2f}'.format(y[i])
 				outfile = os.path.join(plot_path, output_name+'.pdf')
-				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 				plt.close()
-				
+
 
 def get_percentile_indices(X, Y, lower_percentile, upper_percentile):
 	Y_upper_bound = np.percentile(Y, upper_percentile)
@@ -109,9 +109,9 @@ def get_percentile_indices(X, Y, lower_percentile, upper_percentile):
 	X_lower_bound = np.percentile(X, lower_percentile)
 	Y_lower_bound = np.percentile(Y, lower_percentile)
 	lower_bound = np.min([X_lower_bound, Y_lower_bound])
-	
-	indices = np.where((X >= lower_bound) & 
-					   (X <= upper_bound) & 
+
+	indices = np.where((X >= lower_bound) &
+					   (X <= upper_bound) &
 					   (Y >= lower_bound) &
 					   (Y <= upper_bound))[0]
 	return indices[np.argsort((X[indices] - Y[indices])**2)]
@@ -131,37 +131,56 @@ def scatter_plot(predictions, experiment, offset=0.3, alpha=0.4, ax=None):
 	ax.tick_params(axis='x', labelsize=14)
 	ax.tick_params(axis='y', labelsize=14)
 
-	
-def plot_clip_saliency(sess, test, plot_index, params, coordinate_path, save_path, name='test'):
+
+
+def plot_clip_ensemble_saliency_group(test, predictions, plot_index, models, best_path, plot_path, experiment_name, ss_type='seq', num_plots=5, use_scope=True):
 
 	# get coordinates of sequences
 	chrom, start, end, strand = helper.load_coordinates(coordinate_path, name=name)
 
 	X = test['inputs'][plot_index]
 
-	# guided backprop saliency
-	guided_saliency = saliency.guided_backprop(X, layer='output', class_index=0, params=params)
+	input_shape = list(test['inputs'].shape)
+	input_shape[0] = None
+	output_shape = test['targets'].shape
+
+	mean_saliency, guided_saliency = helper.ensemble_clip_saliency(X, models, best_path, experiment_name, input_shape, output_shape, use_scope)
 
 	if guided_saliency.any():
-		# plot saliency
 		for i, index in enumerate(plot_index):
-			
-			fig = plt.figure(figsize=(100,10))
-			if X.shape[3] == 4:
-				visualize.plot_seq_pos_saliency(np.squeeze(X[i]).T, np.squeeze(guided_saliency[i]).T, alphabet='rna')
-			elif X.shape[4] == 6:
-				visualize.plot_seq_struct_saliency(np.squeeze(X[i]).T, np.squeeze(guided_saliency[i]).T)
-
 			if strand[index] == '+':
 				strand_info = 'pos'
 			else:
 				strand_info = 'neg'
-
 			coordinates = str(chrom[index])+':'+str(start[index])+'-'+str(end[index])+'_'+strand_info
-			outfile = os.path.join(save_path, coordinates+'.pdf')
-			fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 
-			plt.close()
+			if ss_type == 'seq':
 
+				for j in range(len(models)):
+					print(plt)
+					fig = plt.figure()
+					visualize.plot_seq_pos_saliency(np.squeeze(X[j]).T, np.squeeze(guided_saliency[j][i]).T, alphabet='rna')
+					outfile = os.path.join(save_path, models[j]+'_'+coordinates+'.pdf')
+					fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
+					plt.close()
 
+				fig = plt.figure()
+				visualize.plot_seq_pos_saliency(np.squeeze(X[i]).T, np.squeeze(mean_saliency[i]).T, alphabet='rna')
+				outfile = os.path.join(plot_path, 'ensemble_'+coordinates+'.pdf')
+				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
+				plt.close()
 
+			else:
+
+				for j in range(len(models)):
+					fig = plt.figure()
+					visualize.plot_seq_struct_saliency(np.squeeze(X[i]).T, np.squeeze(guided_saliency[j][i]).T)
+					outfile = os.path.join(save_path, models[j]+'_'+coordinates+'.pdf')
+					fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
+					plt.close()
+
+				fig = plt.figure()
+				visualize.plot_seq_struct_saliency(np.squeeze(X[i]).T, np.squeeze(mean_saliency[i]).T)
+				outfile = os.path.join(plot_path, 'ensemble_'+coordinates+'.pdf')
+				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
+				plt.close()

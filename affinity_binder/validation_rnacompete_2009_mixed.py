@@ -99,7 +99,7 @@ for ss_type in ss_types:
 			nntrainer.set_best_parameters(sess)
 
 			# test model on validation set
-			loss, mean_vals, std_vals = nntrainer.test_model(sess, valid, batch_size=128, name='test', verbose=1)
+			loss, mean_vals, std_vals = nntrainer.test_model(sess, valid, batch_size=128, name='valid', verbose=1)
 
 			# store the Pearson correlation coefficient
 			results.append(mean_vals[0])

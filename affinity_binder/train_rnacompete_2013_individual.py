@@ -25,7 +25,7 @@ from deepomics import utils, fit
 #13 conv_net seq
 #96 conv_net pu
 
-rbp_index = 0
+rbp_index = 219
 num_epochs = 100
 batch_size = 100
 
@@ -36,7 +36,7 @@ ss_type = 'seq'
 
 
 data_path = '../../data/RNAcompete_2013/rnacompete2013.h5'
-results_path = helper.make_directory('../../results', 'RNAcompete_2013')
+results_path = helper.make_directory('../../results', 'test')
 
 #---------------------------------------------------------------------------------------
 
@@ -57,15 +57,15 @@ input_shape[0] = None
 output_shape = train['targets'].shape
 
 tf.reset_default_graph() # reset any tensorflow graphs
-np.random.seed(247) # for reproducibilitjy
-tf.set_random_seed(247) # for reproducibility
+#np.random.seed(247) # for reproducibilitjy
+#tf.set_random_seed(247) # for reproducibility
 
 # load model
 genome_model = helper.import_model(model)
 model_layers, optimization = genome_model.model(input_shape, output_shape)
 
 # build neural network class
-nnmodel = nn.NeuralNet(seed=247)
+nnmodel = nn.NeuralNet()
 nnmodel.build_layers(model_layers, optimization, use_scope=False)
 
 # loop over different secondary structure contexts
