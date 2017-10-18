@@ -14,10 +14,9 @@ import numpy as np
 from six.moves import cPickle
 np.random.seed(100)
 
-sys.path.append('..')
 import wrangler
 
-data_path = '../../../data/RNAcompete_2013'
+data_path = '../../data/RNAcompete_2013'
 
 # load binding affinities for each rnacompete experiment
 df = pd.read_csv(os.path.join(data_path,'targets.tsv'), sep='\t')

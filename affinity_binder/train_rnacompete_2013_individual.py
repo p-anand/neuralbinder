@@ -28,7 +28,7 @@ num_epochs = 100
 batch_size = 100
 
 # different deep learning models to try out
-model = 'affinity_conv_net'
+model = 'affinity_residualbind'
 normalize_method = 'log_norm'   # 'clip_norm'
 ss_type = 'seq'
 

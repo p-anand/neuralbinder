@@ -25,7 +25,7 @@ num_saliencies = [200, 500]
 num_filters = 5
 
 # different deep learning models to try out
-models = ['affinity_conv_net', 'affinity_residual_net', 'affinity_all_conv_net']
+models = ['affinity_conv_net', 'affinity_residualbind', 'affinity_all_conv_net']
 normalize_method = 'log_norm'   # 'clip_norm'
 ss_types = ['seq', 'pu']
 

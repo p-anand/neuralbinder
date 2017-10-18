@@ -14,11 +14,10 @@ import numpy as np
 from six.moves import cPickle
 np.random.seed(100)
 
-sys.path.append('..')
 import wrangler
 
 rbp_names = ['Fusip', 'HuR', 'PTB', 'RBM4', 'SF2', 'SLM2', 'U1A', 'VTS1', 'YB1']
-data_path = '../../../data/RNAcompete_2009'
+data_path = '../../data/RNAcompete_2009'
 
 # save datasets as hdf5 file
 save_path = os.path.join(data_path, 'rnacompete2009.h5')

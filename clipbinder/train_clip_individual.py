@@ -23,7 +23,7 @@ from deepomics import utils, fit
 
 rbp_name = 'PPIG'
 cell_name = 'HepG2'
-model_name = 'clip_residual_net'#'clip_conv_net'
+model_name = 'clip_residualbind'#'clip_conv_net'
 ss_type = 'seq'
 window = 200
 

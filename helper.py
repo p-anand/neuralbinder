@@ -18,8 +18,8 @@ def import_model(model):
 	elif model == 'affinity_all_conv_net':
 		from model_zoo import affinity_all_conv_net as genome_model
 
-	elif model == 'affinity_residual_net':
-		from model_zoo import affinity_residual_net as genome_model
+	elif model == 'affinity_residualbind':
+		from model_zoo import affinity_residualbind as genome_model
 
 	elif model == 'clip_conv_net':
 		from model_zoo import clip_conv_net as genome_model
@@ -27,8 +27,8 @@ def import_model(model):
 	elif model == 'clip_all_conv_net':
 		from model_zoo import clip_all_conv_net as genome_model
 
-	elif model == 'clip_residual_net':
-		from model_zoo import clip_residual_net as genome_model
+	elif model == 'clip_residualbind':
+		from model_zoo import clip_residualbind as genome_model
 
 	return genome_model
 

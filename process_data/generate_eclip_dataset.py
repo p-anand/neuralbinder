@@ -15,7 +15,6 @@ from six.moves import cPickle
 import numpy as np
 import pandas as pd
 
-sys.path.append('..')
 import wrangler
 
 np.random.seed(247)
