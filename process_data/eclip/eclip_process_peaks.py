@@ -1,3 +1,10 @@
+#---------------------------------------------------------------------------------------
+"""
+Summary: Process peaks called by CLIPPER (Yeo lab) to find
+conservative peaks across replicates.
+"""
+#---------------------------------------------------------------------------------------
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -10,7 +17,6 @@ import matplotlib.pyplot as plt
 
 sys.path.append('..')
 import wrangler
-import helper
 
 #-----------------------------------------------------------------------------------------------
 
@@ -25,17 +31,17 @@ data_path = '/media/peter/storage/encode_eclip'
 bed_path = os.path.join(data_path, 'eclip_bed_data')
 
 # path to save new bed files
-peak_path = helper.make_directory(data_path, 'peaks')
-bed_save_path = helper.make_directory(peak_path, 'yeo_peaks')
+peak_path = wrangler.utils.make_directory(data_path, 'peaks')
+bed_save_path = wrangler.utils.make_directory(peak_path, 'yeo_peaks')
 
-# bath to save statistics 
-statistics_path = helper.make_directory(bed_save_path, 'statistics')
+# bath to save statistics
+statistics_path = wrangler.utils.make_directory(bed_save_path, 'statistics')
 
 #-----------------------------------------------------------------------------------------------
 # process data
 
 # parse meta data file
-parse_list = ['File accession', 'Experiment accession', 
+parse_list = ['File accession', 'Experiment accession',
               'Biological replicate(s)', 'Experiment target', 'Biosample term name']
 meta_data_path = os.path.join(bed_path, 'metadata.tsv')
 values = wrangler.encode.parse_metadata(meta_data_path, parse_list, genome='GRCh38', file_format='bed narrowPeak')
@@ -70,7 +76,7 @@ for experiment in unique_experiments:
 	rep2_name = experiment_name+'_rep'+str(replicates[rep2_index])
 
 	# make directory to save temporary files
-	tmp_path = helper.make_directory(bed_save_path, experiment_name)
+	tmp_path = wrangler.utils.make_directory(bed_save_path, experiment_name)
 
 	#-----------------------------------------------------------------------------------------------
 	# process replicates
@@ -105,20 +111,20 @@ for experiment in unique_experiments:
 
 	# filter peaks with low signal values
 	rep1_signal_filter_path = os.path.join(tmp_path, rep1_name+'_signal.bed')
-	wrangler.bash.positive_filter(rep1_sort_path, rep1_signal_filter_path, 
+	wrangler.bash.positive_filter(rep1_sort_path, rep1_signal_filter_path,
 	                              signal=7, threshold=signal_thresh, verbose=1)
 
 	rep2_signal_filter_path = os.path.join(tmp_path, rep2_name+'_signal.bed')
-	wrangler.bash.positive_filter(rep2_sort_path, rep2_signal_filter_path, 
+	wrangler.bash.positive_filter(rep2_sort_path, rep2_signal_filter_path,
 	                              signal=7, threshold=signal_thresh, verbose=1)
 
 	# filter peaks low p-values
 	rep1_pvalue_filter_path = os.path.join(tmp_path, rep1_name+'_pvalue.bed')
-	wrangler.bash.positive_filter(rep1_signal_filter_path, rep1_pvalue_filter_path, 
+	wrangler.bash.positive_filter(rep1_signal_filter_path, rep1_pvalue_filter_path,
 	                              signal=8, threshold=p_value_thresh, verbose=1)
 
 	rep2_pvalue_filter_path = os.path.join(tmp_path, rep2_name+'_pvalue.bed')
-	wrangler.bash.positive_filter(rep2_signal_filter_path, rep2_pvalue_filter_path, 
+	wrangler.bash.positive_filter(rep2_signal_filter_path, rep2_pvalue_filter_path,
 	                              signal=8, threshold=p_value_thresh, verbose=1)
 
 	#-----------------------------------------------------------------------------------------------
@@ -133,7 +139,7 @@ for experiment in unique_experiments:
 	wrangler.bedtools.sort(overlap_unsorted_path, overlap_sort_path, verbose=1)
 
 	# filter off-diagonal signal values across replicates
-	correlation_path = os.path.join(tmp_path, experiment_name+'_correlation.bed') 
+	correlation_path = os.path.join(tmp_path, experiment_name+'_correlation.bed')
 	wrangler.bash.correlation_filter(overlap_sort_path, correlation_path, signals=[7, 17], equality='<', threshold=1.0, verbose=1)
 
 	# merge redundant entries
@@ -143,7 +149,7 @@ for experiment in unique_experiments:
 
 	#-----------------------------------------------------------------------------------------------
 	# plot scatter between replicates
-		
+
 	fig = plt.figure()
 
 	# scatter plot of signal values between unfiltered replicates that overlap
@@ -185,7 +191,7 @@ for experiment in unique_experiments:
 	plt.xlabel('Signal value (rep 1)', fontsize=14)
 	plt.ylabel('Signal value (rep 2)', fontsize=14)
 	outfile = os.path.join(statistics_path, experiment_name+'_scatter')
-	fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+	fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 
 	fig = plt.figure()
 	size = end-start
@@ -193,7 +199,7 @@ for experiment in unique_experiments:
 	plt.xlabel('Merged coordinate size (nt)', fontsize=14)
 	plt.ylabel('Counts', fontsize=14)
 	outfile = os.path.join(statistics_path, experiment_name+'_size')
-	fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+	fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 
 	df = pd.read_csv(rep1_path, sep='\t', header=None)
 	start = df[1].as_matrix()

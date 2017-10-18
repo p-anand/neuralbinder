@@ -1,8 +1,6 @@
 #---------------------------------------------------------------------------------------
 """
-Summary: This script trains deep learning models on RNAcompete_2013 datasets with
-sequence + secondary structure profiles, i.e. paired-unparied (pu) or structural
-profiles (struct).
+Summary: Test deep learning models on RNAcompete_2013 validation datasets 
 """
 #---------------------------------------------------------------------------------------
 

@@ -1,8 +1,7 @@
 #---------------------------------------------------------------------------------------
 """
-Summary: This script trains deep learning models on RNAcompete_2013 datasets with
-sequence + secondary structure profiles, i.e. paired-unparied (pu) or structural
-profiles (struct).
+Summary: Train deep learning models on eclip datasets with
+sequence and sequence with paired-unparied (pu) secondary structure profiles
 """
 #---------------------------------------------------------------------------------------
 
@@ -40,6 +39,7 @@ file_names = helper.get_file_names(dataset_path)
 
 # loop through models
 for model in models:
+
     # model results path
     model_path = helper.make_directory(results_path, model)
 
@@ -60,7 +60,7 @@ for model in models:
             dataset_file_path = os.path.join(dataset_path, file_name)
             train, valid, test = helper.load_dataset_hdf5(dataset_file_path, ss_type=ss_type)
 
-            # build model
+            # set shapes
             input_shape = list(train['inputs'].shape)
             input_shape[0] = None
             output_shape = [None, train['targets'].shape[1]]

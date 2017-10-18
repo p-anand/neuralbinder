@@ -1,8 +1,7 @@
 #---------------------------------------------------------------------------------------
 """
-Summary: This script trains deep learning models on RNAcompete_2013 datasets with
-sequence + secondary structure profiles, i.e. paired-unparied (pu) or structural 
-profiles (struct).  
+Summary: Train a simple model on the saliency maps of individual models for
+top-scoring sequences to identify learned motifs in the RNAcompete 2013 dataset.
 """
 #---------------------------------------------------------------------------------------
 
@@ -26,7 +25,7 @@ num_saliencies = [200, 500]
 num_filters = 5
 
 # different deep learning models to try out
-models = ['affinity_conv_net', 'affinity_residual_net', 'affinity_all_conv_net'] 
+models = ['affinity_conv_net', 'affinity_residual_net', 'affinity_all_conv_net']
 normalize_method = 'log_norm'   # 'clip_norm'
 ss_types = ['seq', 'pu']
 
@@ -44,25 +43,25 @@ def classifier_model(input_shape, output_shape, num_filters):
 	layer1 = {'layer': 'input', #41
 			'input_shape': input_shape
 			}
-	layer2 = {'layer': 'conv1d', 
-			'num_filters': num_filters, 
-			'filter_size': 11, 
+	layer2 = {'layer': 'conv1d',
+			'num_filters': num_filters,
+			'filter_size': 11,
 			'activation': 'sigmoid',
 			'W': init.HeUniform(),
 			'padding': 'SAME',
-			'global_pool': 'max',  
+			'global_pool': 'max',
 			}
 	layer3 = {'layer': 'reshape',
 			  'reshape': [-1, num_filters],
 			}
-	layer4 = {'layer': 'mean_pool', 
+	layer4 = {'layer': 'mean_pool',
 			}
 	layer5 = {'layer': 'reshape',
 			  'reshape': [-1, 1],
 			}
 	#from tfomics import build_network
 	model_layers = [layer1, layer2, layer3, layer4, layer5]
-	
+
 	# optimization parameters
 	optimization = {"objective": "binary",
 				  "optimizer": "adam",
@@ -82,12 +81,12 @@ experiments = helper.get_experiments_hdf5(data_path)
 for ss_type in ss_types:
 	print('input data: ' + ss_type)
 	sstype_path = os.path.join(trained_path, normalize_method+'_'+ss_type)
-	
+
 	# path to save parameters of saliency classifier
 	classifier_sstype_path = helper.make_directory(results_path, normalize_method+'_'+ss_type)
 
 	# loop over different models
-	for model in models:        
+	for model in models:
 		print('model: ' + model)
 		model_path = os.path.join(sstype_path, model)
 
@@ -105,12 +104,12 @@ for ss_type in ss_types:
 
 			# process rbp dataset
 			train, valid, test = helper.process_data(train, valid, test, method=normalize_method)
-			 
+
 			# get shapes
 			input_shape = list(train['inputs'].shape)
 			input_shape[0] = None
 			output_shape = train['targets'].shape
-			
+
 			# load model
 			genome_model = helper.import_model(model)
 			model_layers, optimization = genome_model.model(input_shape, output_shape)
@@ -130,7 +129,7 @@ for ss_type in ss_types:
 			# load best parameters
 			nntrainer.set_best_parameters(sess)
 
-			# get predictions 
+			# get predictions
 			predictions = nntrainer.get_activations(sess, train, layer='output')
 			max_index = np.argsort(predictions[:,0])[::-1]
 
@@ -142,7 +141,7 @@ for ss_type in ss_types:
 			params_path = helper.make_directory(motif_path, 'parameters')
 			for num_saliency in num_saliencies:
 
-				# get saliency for highest predictions 
+				# get saliency for highest predictions
 				X = train['inputs'][max_index[:num_saliency]]
 
 				# parameters for saliency analysis
@@ -164,7 +163,7 @@ for ss_type in ss_types:
 				background = np.vstack(background)
 
 				# merge datasets
-				inputs = np.vstack([guided_saliency, background]) 
+				inputs = np.vstack([guided_saliency, background])
 				targets = np.vstack([np.ones((num_saliency,1)), np.zeros((num_saliency,1))])
 				shuffle = np.random.permutation(inputs.shape[0])
 				new_train = {'inputs': inputs[shuffle], 'targets': targets[shuffle]}
@@ -185,11 +184,11 @@ for ss_type in ss_types:
 
 				# fit data
 				data = {'train': new_train}
-				fit.train_minibatch(sess, nntrainer, data, batch_size=32, num_epochs=500, 
+				fit.train_minibatch(sess, nntrainer, data, batch_size=32, num_epochs=500,
 									  patience=20, verbose=2, shuffle=True, save_all=False)
 
 
-				# plot mean activations for each filter 
+				# plot mean activations for each filter
 				data={'inputs': guided_saliency}
 				fmaps = nntrainer.get_activations(sess, data, layer='conv1d_0_active')
 				mean_fmap = np.squeeze(np.mean(fmaps, axis=0))
@@ -204,7 +203,7 @@ for ss_type in ss_types:
 				plt.xlabel('Position (nt)', fontsize=16)
 				plt.ylabel('Activation frequency ', fontsize=16)
 				outfile = os.path.join(motif_path, str(num_saliency)+'_activations.pdf')
-				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+				fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 				plt.close()
 
 				# extract pwm from activation alignments and plot pwms
@@ -221,7 +220,7 @@ for ss_type in ss_types:
 						plt.imshow(logo)
 						plt.axis('off')
 						outfile = os.path.join(motif_path, str(num_saliency)+'_filter_'+ str(i+1)+'_logo.pdf')
-						fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+						fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 						plt.close()
 
 						# clip sequence logos
@@ -234,14 +233,14 @@ for ss_type in ss_types:
 						plt.imshow(logo)
 						plt.axis('off')
 						outfile = os.path.join(motif_path, str(num_saliency)+'_clip_filter_'+ str(i+1)+'_logo.pdf')
-						fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+						fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 						plt.close()
-						
+
 
 						fig = plt.figure()
 						plt = visualize.filter_heatmap(W.T, norm=True, cmap='hot_r')
 						outfile = os.path.join(motif_path, str(num_saliency)+'_filter_'+ str(i+1)+'_heatmap.pdf')
-						fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight') 
+						fig.savefig(outfile, format='pdf', dpi=200, bbox_inches='tight')
 						plt.close()
 
 
@@ -257,16 +256,11 @@ for ss_type in ss_types:
 					if W.shape[-2] > 4:
 						struct_logo = visualize.seq_logo(utils.normalize_pwm(np.squeeze(W[:,:,:,i].T)[4:,:],factor=3), height=600, nt_width=100, alphabet='pu')
 						logo = np.vstack([logo, struct_logo])
-						
+
 					plt.figure()
 					plt.imshow(logo)
 					plt.axis('off')
-					
+
 					plt.figure()
 					plt = visualize.filter_heatmap(np.squeeze(W[:,:,:,i].T), norm=None, cmap='seismic', cbar_norm=False)
 				"""
-
-
-
-
-

@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------------------
 """
-Summary: This script trains deep learning models on RNAcompete_2013 datasets with
-sequence + secondary structure profiles, i.e. paired-unparied (pu) or structural
-profiles (struct).
+Summary: Train a simple model on the saliency maps of the ensemble of models
+for top-scoring sequences to identify learned motifs in the setAB-mixed
+RNAcompete 2009 dataset.
 """
 #---------------------------------------------------------------------------------------
 

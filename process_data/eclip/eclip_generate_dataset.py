@@ -1,3 +1,11 @@
+#---------------------------------------------------------------------------------------
+"""
+Summary: Generate hdf5 files for each eclip experiment for a fixed length window
+about each peak.  The background data uses the peaks called for the control
+experiments, which we refer to as non-specific.
+"""
+#---------------------------------------------------------------------------------------
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -9,7 +17,6 @@ import pandas as pd
 
 sys.path.append('..')
 import wrangler
-import helper
 
 np.random.seed(247)
 
@@ -31,7 +38,7 @@ background_path = os.path.join(data_path, 'peaks', 'background_peaks')
 chrom_path = os.path.join(data_path, 'chrom_sizes.bed')
 
 # path to save eclip datasets
-dataset_path = helper.make_directory(data_path, 'eclip_datasets')
+dataset_path = wrangler.utils.make_directory(data_path, 'eclip_datasets')
 
 #-----------------------------------------------------------------------------------------------
 # preliminaries
@@ -59,7 +66,7 @@ if not os.path.isfile(genome_path):
 
 # loop over each experiment and process replicates
 unique_experiments = np.unique(experiments)
-for experiment in unique_experiments[26:]:
+for experiment in unique_experiments:
 
     index = np.where(experiments == experiment)[0]
     rbp_name = targets[index[0]][:targets[index[0]].index('-')]
@@ -177,7 +184,7 @@ for experiment in unique_experiments[26:]:
     labels = np.vstack([np.ones((len(pos_one_hot_all), 1)), np.zeros((len(neg_one_hot_all), 1))])
 
     # split dataset into training set, cross-validation set, and test set
-    train, valid, test, indices = helper.split_dataset(one_hot, labels, valid_frac=0.1, test_frac=0.2)
+    train, valid, test, indices = wrangler.munge.split_dataset(one_hot, labels, valid_frac=0.1, test_frac=0.2)
 
     # save dataset to hdf5 file
     with h5py.File(os.path.join(dataset_path, experiment_name+'_'+str(window)+'.h5'), 'w') as fout:

@@ -133,10 +133,34 @@ def scatter_plot(predictions, experiment, offset=0.3, alpha=0.4, ax=None):
 
 
 
+def load_coordinates(coordinate_path, name='test'):
+	with open(coordinate_path, 'rb') as f:
+		train_coords = cPickle.load(f)
+		valid_coords = cPickle.load(f)
+		test_coords = cPickle.load(f)
+
+	if name == 'train':
+		chrom = train_coords[0]
+		start = train_coords[1]
+		end = train_coords[2]
+		strand_info = train_coords[3]
+	elif name == 'valid':
+		chrom = valid_coords[0]
+		start = valid_coords[1]
+		end = valid_coords[2]
+		strand_info = valid_coords[3]
+	elif name == 'test':
+		chrom = test_coords[0]
+		start = test_coords[1]
+		end = test_coords[2]
+		strand_info = test_coords[3]
+	return chrom, start, end, strand_info
+
+
 def plot_clip_ensemble_saliency_group(test, predictions, plot_index, models, best_path, plot_path, experiment_name, ss_type='seq', num_plots=5, use_scope=True):
 
 	# get coordinates of sequences
-	chrom, start, end, strand = helper.load_coordinates(coordinate_path, name=name)
+	chrom, start, end, strand = load_coordinates(coordinate_path, name=name)
 
 	X = test['inputs'][plot_index]
 
@@ -144,7 +168,7 @@ def plot_clip_ensemble_saliency_group(test, predictions, plot_index, models, bes
 	input_shape[0] = None
 	output_shape = test['targets'].shape
 
-	mean_saliency, guided_saliency = helper.ensemble_clip_saliency(X, models, best_path, experiment_name, input_shape, output_shape, use_scope)
+	mean_saliency, guided_saliency = helper.ensemble_saliency(X, models, best_path, experiment_name, input_shape, output_shape, use_scope)
 
 	if guided_saliency.any():
 		for i, index in enumerate(plot_index):

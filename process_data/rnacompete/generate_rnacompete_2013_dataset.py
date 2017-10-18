@@ -1,3 +1,9 @@
+#---------------------------------------------------------------------------------------
+"""
+Summary: Generates hdf5 file with all 2013 RNAcompete experiments.
+"""
+#---------------------------------------------------------------------------------------
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -10,9 +16,8 @@ np.random.seed(100)
 
 sys.path.append('..')
 import wrangler
-import helper
 
-data_path = '../../data/RNAcompete_2013'
+data_path = '../../../data/RNAcompete_2013'
 
 # load binding affinities for each rnacompete experiment
 df = pd.read_csv(os.path.join(data_path,'targets.tsv'), sep='\t')
@@ -44,7 +49,7 @@ structure = wrangler.structure.RNAplfold_profile(fasta_path, profile_path, windo
 data = np.concatenate([one_hot, structure], axis=1)
 
 # split dataset into train, cross-validation, and test set
-train, valid, test = helper.split_rnacompete_dataset(data, targets, rnac_set, valid_frac=0.1)
+train, valid, test = wrangler.munge.split_rnacompete_dataset(data, targets, rnac_set, valid_frac=0.1)
 
 # save dataset
 save_path = os.path.join(data_path, 'rnacompete2013.h5')

@@ -1,3 +1,9 @@
+#---------------------------------------------------------------------------------------
+"""
+Summary: Generates hdf5 file with all 2009 RNAcompete experiments.
+"""
+#---------------------------------------------------------------------------------------
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -10,10 +16,9 @@ np.random.seed(100)
 
 sys.path.append('..')
 import wrangler
-import helper
 
 rbp_names = ['Fusip', 'HuR', 'PTB', 'RBM4', 'SF2', 'SLM2', 'U1A', 'VTS1', 'YB1']
-data_path = '../../data/RNAcompete_2009'
+data_path = '../../../data/RNAcompete_2009'
 
 # save datasets as hdf5 file
 save_path = os.path.join(data_path, 'rnacompete2009.h5')
@@ -71,7 +76,7 @@ with h5py.File(save_path, "w") as f:
         experiment = np.concatenate([np.tile('A',len(one_hot_A)), np.tile('B',len(one_hot_B))])
 
         # split dataset into train, cross-validation, and test set
-        train, valid, test = helper.split_rnacompete_dataset(data, targets, experiment, valid_frac=0.1)
+        train, valid, test = wrangler.munge.split_rnacompete_dataset(data, targets, experiment, valid_frac=0.1)
 
         # save dataset as a group with the rbp name
         grp = f.create_group(rbp_name)
@@ -81,4 +86,3 @@ with h5py.File(save_path, "w") as f:
         dset = grp.create_dataset("Y_valid", data=valid[1].astype(np.float32), compression="gzip")
         dset = grp.create_dataset("X_test", data=test[0].astype(np.float32), compression="gzip")
         dset = grp.create_dataset("Y_test", data=test[1].astype(np.float32), compression="gzip")
-

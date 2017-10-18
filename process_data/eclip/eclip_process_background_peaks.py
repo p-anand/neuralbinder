@@ -1,3 +1,9 @@
+#---------------------------------------------------------------------------------------
+"""
+Summary: Use Piranha to call peaks for all control experiments
+"""
+#---------------------------------------------------------------------------------------
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -6,7 +12,6 @@ import os, sys
 import numpy as np
 
 sys.path.append('..')
-import helper
 import wrangler
 
 #---------------------------------------------------------------------------------------------------
@@ -20,8 +25,8 @@ data_path = '/media/peter/storage/encode_eclip'
 bam_path = os.path.join(data_path, 'eclip_bam_controls')
 
 # output directory
-peak_path = helper.make_directory(data_path, 'peaks')
-save_path = helper.make_directory(peak_path, 'background_peaks')
+peak_path = wrangler.utils.make_directory(data_path, 'peaks')
+save_path = wrangler.utils.make_directory(peak_path, 'background_peaks')
 
 #---------------------------------------------------------------------------------------------------
 
@@ -38,15 +43,12 @@ replicates = values['Biological replicate(s)']
 targets = values['Experiment target']
 cell_types = values['Biosample term name']
 
-files = ['ENCFF568BOI', 'ENCFF895BNM', 'ENCFF735PKL', 'ENCFF269WSV', 'ENCFF791AGL', 'ENCFF463LHG']
-#          HLTF_K562      PTBP1-HepG2     SF3B K562      TNRC6A_K562   PTBP1-K562    DDX6-HepG2
-for j in range(len(files)):
-    i = np.where(files[j] == file_names)[0][0]
-    print(i)
+# loop through bam files and call peaks
+for i, file_name in enumerate(file_names):
     print('Peak calling: ' + targets[i] + ' ' + cell_types[i])
     rbp_name = targets[i][:targets[i].index(' ')]
     experiment_name = rbp_name + '_' + cell_types[i]
 
-    file_path = os.path.join(bam_path, file_names[i]+'.bam')
+    file_path = os.path.join(bam_path, file_name+'.bam')
     output_path = os.path.join(save_path, experiment_name+'.bed')
     wrangler.peaks.call_peaks(file_path, output_path, bin_size=bin_size, p_value=p_value)

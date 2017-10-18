@@ -1,6 +1,6 @@
 #---------------------------------------------------------------------------------------
 """
-Summary: This script trains deep learning models on RNAcompete_2013 datasets with
+Summary: Train deep learning models on RNAcompete_2009 datasets with
 sequence + secondary structure profiles, i.e. paired-unparied (pu) or structural
 profiles (struct).
 """
@@ -73,7 +73,7 @@ for ss_type in ss_types:
 			nnmodel = nn.NeuralNet(seed=247)
 			nnmodel.build_layers(model_layers, optimization)
 			nnmodel.inspect_layers()
-			
+
 			# compile neural trainer
 			file_path = os.path.join(model_path, rbp_name)
 			nntrainer = nn.NeuralTrainer(nnmodel, save='best', file_path=file_path)

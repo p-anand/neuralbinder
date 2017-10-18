@@ -1,8 +1,7 @@
 #---------------------------------------------------------------------------------------
 """
-Summary: This script trains deep learning models on RNAcompete_2013 datasets with
-sequence + secondary structure profiles, i.e. paired-unparied (pu) or structural
-profiles (struct).
+Summary: Train a simple model on the saliency maps of individual models for
+top-scoring sequences to identify learned motifs in the RNAcompete 2009 dataset.
 """
 #---------------------------------------------------------------------------------------
 
@@ -40,7 +39,7 @@ results_path = utils.make_directory(trained_path, 'motifs')
 def classifier_model(input_shape, output_shape, num_filters):
 
 	# create model
-	layer1 = {'layer': 'input', 
+	layer1 = {'layer': 'input',
 			'input_shape': input_shape
 			}
 	layer2 = {'layer': 'conv1d',
