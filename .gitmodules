@@ -4,3 +4,6 @@
 [submodule "wrangler"]
 	path = wrangler
 	url = https://github.com/p-koo/wrangler
+[submodule "process_data/wrangler"]
+	path = process_data/wrangler
+	url = https://github.com/p-koo/wrangler
