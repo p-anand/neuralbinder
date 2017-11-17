@@ -268,6 +268,33 @@ def ensemble_predictions(test, rbp_name, models, input_shape, output_shape, best
 	return ensemble_predictions, predictions
 
 
+def ensemble_clip_predictions(test, rbp_name, models, input_shape, output_shape, best_path, ss_type, use_scope=True):
+	predictions = []
+	for model in models:
+
+
+		# load model
+		genome_model = import_model(model)
+		model_layers, optimization = genome_model.model(input_shape, output_shape)
+
+		# build neural network class
+		nnmodel = nn.NeuralNet(seed=247)
+		nnmodel.build_layers(model_layers, optimization, use_scope=use_scope)
+
+		file_path = os.path.join(best_path, model, ss_type, rbp_name)
+		nntrainer = nn.NeuralTrainer(nnmodel, save='best', file_path=file_path)
+
+		# initialize session
+		sess = utils.initialize_session(nnmodel.placeholders)
+
+		# load best model
+		nntrainer.set_best_parameters(sess, verbose=0)
+
+		predictions.append(nntrainer.get_activations(sess, test))
+
+	predictions = np.hstack(predictions)
+	ensemble_predictions = np.mean(predictions,axis=1)
+	return ensemble_predictions, predictions
 
 def ensemble_saliency(X, models, best_path, rbp_name, input_shape, output_shape, use_scope=True):
 
