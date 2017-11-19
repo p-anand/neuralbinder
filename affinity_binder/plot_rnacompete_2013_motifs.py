@@ -21,7 +21,7 @@ from deepomics import utils, fit, metrics, saliency, visualize, init
 
 #---------------------------------------------------------------------------------------
 
-num_saliencies = [200, 500]
+num_saliencies = [200]
 num_filters = 5
 
 # different deep learning models to try out

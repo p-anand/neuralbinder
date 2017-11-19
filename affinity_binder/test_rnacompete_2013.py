@@ -20,7 +20,7 @@ from deepomics import utils, fit
 
 #---------------------------------------------------------------------------------------
 
-num_epochs = 100
+num_epochs = 200
 batch_size = 100
 
 # different deep learning models to try out
@@ -71,7 +71,7 @@ for ss_type in ss_types:
 
 			# build neural network class
 			nnmodel = nn.NeuralNet(seed=247)
-			nnmodel.build_layers(model_layers, optimization, use_scope=False)
+			nnmodel.build_layers(model_layers, optimization)
 
 			# compile neural trainer
 			file_path = os.path.join(model_path, experiment)

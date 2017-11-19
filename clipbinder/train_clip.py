@@ -20,7 +20,7 @@ from deepomics import utils, fit
 
 #---------------------------------------------------------------------------------------------------
 
-models = ['clip_conv_net', 'clip_residualbind', 'clip_all_conv_net']
+models = ['clip_conv_net', 'clip_residualbind']
 ss_types = ['seq', 'pu']
 window = 200
 

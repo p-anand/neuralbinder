@@ -32,7 +32,7 @@ def model(input_shape, output_shape):
     # optimization parameters
     optimization = {"objective": "squared_error",
                   "optimizer": "adam",
-                  "learning_rate": 0.001,
+                  "learning_rate": 0.0005,
                   "l2": 1e-6,
                   #"l1": 0.1,
                   }

@@ -20,7 +20,7 @@ from deepomics import utils, fit
 
 #---------------------------------------------------------------------------------------------------
 
-models = ['clip_conv_net', 'clip_residualbind', 'clip_all_conv_net']
+models = ['clip_conv_net', 'clip_residualbind']
 ss_types = ['seq', 'pu']
 window = 200
 
@@ -32,7 +32,7 @@ num_epochs = 200
 dataset_path = '/media/peter/storage/encode_eclip/eclip_datasets'
 
 # set results path
-results_path = helper.make_directory('../../results', 'encode_eclip')
+results_path = helper.make_directory('../../results', 'encode_eclip2')
 
 # get list of .h5 files in dataset path
 file_names = helper.get_file_names(dataset_path)
@@ -72,7 +72,7 @@ for model in models:
             # build neural network class
             nnmodel = nn.NeuralNet(seed=247)
             nnmodel.build_layers(model_layers, optimization)
-            nnmodel.inspect_layers()
+            #nnmodel.inspect_layers()
 
             # compile neural trainer
             model_save_path = os.path.join(sstype_path, rbp_name+'_'+cell_name)

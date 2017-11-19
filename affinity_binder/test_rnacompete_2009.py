@@ -20,7 +20,7 @@ from deepomics import utils, fit
 
 #---------------------------------------------------------------------------------------
 
-num_epochs = 100
+num_epochs = 200
 batch_size = 100
 
 # different deep learning models to try out
