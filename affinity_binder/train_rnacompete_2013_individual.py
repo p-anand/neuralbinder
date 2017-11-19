@@ -60,7 +60,7 @@ tf.reset_default_graph() # reset any tensorflow graphs
 
 # load model
 genome_model = helper.import_model(model)
-model_layers, optimization = genome_model.model(input_shape, output_shape)
+model_layers, optimization = genome_model(input_shape, output_shape)
 
 # build neural network class
 nnmodel = nn.NeuralNet()

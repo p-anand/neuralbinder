@@ -91,7 +91,7 @@ for ss_type in ss_types:
 
 			# load model
 			genome_model = helper.import_model(model)
-			model_layers, optimization = genome_model.model(input_shape, output_shape)
+			model_layers, optimization = genome_model(input_shape, output_shape)
 
 			# build neural network class
 			nnmodel = nn.NeuralNet(seed=247)
@@ -117,7 +117,7 @@ for ss_type in ss_types:
 			plt.close()
 
 			# parameters for saliency analysis
-			params = {'genome_model': genome_model.model,
+			params = {'genome_model': genome_model,
 					  'input_shape': input_shape,
 					  'output_shape': output_shape,
 					  'model_path': file_path+'_best.ckpt',

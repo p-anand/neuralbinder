@@ -13,22 +13,22 @@ def import_model(model):
 	""" import models by model name """
 
 	if model == 'affinity_conv_net':
-		from model_zoo import affinity_conv_net as genome_model
+		from model_zoo import affinity_conv_net.model as genome_model
 
 	elif model == 'affinity_all_conv_net':
-		from model_zoo import affinity_all_conv_net as genome_model
+		from model_zoo import affinity_all_conv_net.model as genome_model
 
 	elif model == 'affinity_residualbind':
-		from model_zoo import affinity_residualbind as genome_model
+		from model_zoo import affinity_residualbind.model as genome_model
 
 	elif model == 'clip_conv_net':
-		from model_zoo import clip_conv_net as genome_model
+		from model_zoo import clip_conv_net.model as genome_model
 
 	elif model == 'clip_all_conv_net':
-		from model_zoo import clip_all_conv_net as genome_model
+		from model_zoo import clip_all_conv_net.model as genome_model
 
 	elif model == 'clip_residualbind':
-		from model_zoo import clip_residualbind as genome_model
+		from model_zoo import clip_residualbind.model as genome_model
 
 	return genome_model
 
@@ -246,7 +246,7 @@ def ensemble_predictions(test, rbp_name, models, input_shape, output_shape, best
 
 		# load model
 		genome_model = import_model(model)
-		model_layers, optimization = genome_model.model(input_shape, output_shape)
+		model_layers, optimization = genome_model(input_shape, output_shape)
 
 		# build neural network class
 		nnmodel = nn.NeuralNet(seed=247)
@@ -275,7 +275,7 @@ def ensemble_clip_predictions(test, rbp_name, models, input_shape, output_shape,
 
 		# load model
 		genome_model = import_model(model)
-		model_layers, optimization = genome_model.model(input_shape, output_shape)
+		model_layers, optimization = genome_model(input_shape, output_shape)
 
 		# build neural network class
 		nnmodel = nn.NeuralNet(seed=247)
@@ -302,12 +302,12 @@ def ensemble_saliency(X, models, best_path, rbp_name, input_shape, output_shape,
 	for model in models:
 		# load model
 		genome_model = import_model(model)
-		model_layers, optimization = genome_model.model(input_shape, output_shape)
+		model_layers, optimization = genome_model(input_shape, output_shape)
 
 		# parameters for saliency analysis
 		params = {'input_shape': input_shape,
 				  'output_shape': output_shape,
-				 'genome_model': genome_model.model,
+				 'genome_model': genome_model,
 				 'model_path': os.path.join(best_path, model, rbp_name+'_best.ckpt'),
 				 'optimization': optimization,
 				 'use_scope': use_scope

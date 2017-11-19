@@ -23,7 +23,7 @@ from deepomics import utils, fit
 
 #---------------------------------------------------------------------------------------
 
-models = ['clip_conv_net', 'clip_residualbind', 'clip_all_conv_net']
+models = ['clip_conv_net', 'clip_residualbind']
 ss_types = ['seq', 'pu']
 window = 200
 
@@ -68,9 +68,3 @@ for ss_type in ss_types:
         top_indices = np.argmax(predictions)[::-1]
         plot_helper.plot_ensemble_clip_saliency_group(test, ensemble_predictions, top_indices, models, sstype_path, rbp_path,
         										rbp_name+'_'+cell_name, ss_type=ss_type, num_plots=20, use_scope=True)
-
-        # save results
-        with open(os.path.join(rbp_path, 'scatter_coordinates.pickle'), 'wb') as f:
-            cPickle.dump(ensemble_predictions, f, protocol=cPickle.HIGHEST_PROTOCOL)
-            cPickle.dump(test['targets'], f, protocol=cPickle.HIGHEST_PROTOCOL)
-            cPickle.dump(predictions, f, protocol=cPickle.HIGHEST_PROTOCOL)

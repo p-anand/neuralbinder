@@ -52,7 +52,7 @@ output_shape = [None, train['targets'].shape[1]]
 
 # build model
 genome_model = helper.import_model(model_name)
-model_layers, optimization = genome_model.model(input_shape, output_shape)
+model_layers, optimization = genome_model(input_shape, output_shape)
 
 # build neural network class
 nnmodel = nn.NeuralNet(seed=247)
