@@ -1,0 +1,2 @@
+include README.md
+include neuralbinder/datasets/*.h5
