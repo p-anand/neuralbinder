@@ -77,7 +77,7 @@ To use;
 
 * numpy
 * scipy
-* scikit
+* sklearn
 * tensorflow
 * matplotlib (for plotting)
 
