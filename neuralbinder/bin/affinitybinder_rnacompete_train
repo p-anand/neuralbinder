@@ -113,7 +113,7 @@ for ss_type in ss_types:
 
 		# loop over different RNA binding proteins
 		for rbp_index, experiment in enumerate(all_experiments):
-            if experiment in experiments:
+			if experiment in experiments:
 			    print('Analyzing: '+ experiment)
 			    tf.reset_default_graph() # reset any tensorflow graphs
 			    np.random.seed(247) # for reproducibilitjy
