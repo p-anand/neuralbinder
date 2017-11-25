@@ -4,6 +4,7 @@
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/EGG-INFO/requires.txt
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/EGG-INFO/SOURCES.txt
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/EGG-INFO/top_level.txt
+/usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/EGG-INFO/scripts/affinitybinder_rnacompete_train
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/neuralbinder/__init__.py
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/neuralbinder/__init__.pyc
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/neuralbinder/affinity_binder/__init__.py
@@ -128,6 +129,7 @@
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/neuralbinder/neuralbindhelpers/helper.pyc
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/neuralbinder/neuralbindhelpers/plot_helper.py
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/neuralbinder/neuralbindhelpers/plot_helper.pyc
+/usr/local/Cellar/python/2.7.13/Frameworks/Python.framework/Versions/2.7/bin/affinitybinder_rnacompete_train
 /usr/local/Cellar/python/2.7.13/Frameworks/Python.framework/Versions/2.7/bin/tensorboard
 /usr/local/Cellar/python/2.7.13/Frameworks/Python.framework/Versions/2.7/bin/wheel
 /usr/local/Cellar/python/2.7.13/Frameworks/Python.framework/Versions/2.7/bin/pbr

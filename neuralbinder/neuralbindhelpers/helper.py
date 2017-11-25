@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import os, sys, h5py
 import numpy as np
+import errno
 from six.moves import cPickle
 from neuralbinder.deepomics import neuralnetwork as nn
 from neuralbinder.deepomics import utils, saliency
@@ -201,8 +202,20 @@ def dataset_keys_hdf5(file_path):
 
 
 def get_experiments_hdf5(file_path):
-	dataset = h5py.File(file_path, 'r')
-	return np.array(dataset['experiment'])
+	try:
+		dataset = h5py.File(file_path, 'r')
+		return np.array(dataset['experiment'])
+	except IOError, (error, message):
+		if error == errno.ENOENT:
+			print("No such file!!")
+			sys.exit(1)
+		elif error == errno.EPERM:
+			print ("Permission denied!!")
+			sys.exit(1)
+		else:
+			print(message)
+			sys.exit(1)
+		
 
 
 def get_file_names(dataset_path):

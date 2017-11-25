@@ -1,0 +1,74 @@
+#!/usr/bin/env python
+'''
+#######################################################################################################################
+					affinitybinder_rnacompete_train.py
+This scripts trains all the neural network present in the neuralbinder package on the data generated from the RNAcompete
+experiments. More details about how the input file for this script was generated can be found in the documentation. The
+input file required for this script can also be downloaded from the website directly.
+
+Summary: Train deep learning models on RNAcompete_2013 datasets with
+sequence + secondary structure profiles, i.e. paired-unparied (pu) or structural
+profiles (struct).
+#######################################################################################################################
+'''
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
+import os, sys, h5py, argparse
+import numpy as np
+import tensorflow as tf
+import errno
+
+from neuralbinder.neuralbindhelpers import helper
+from neuralbinder.deepomics import neuralnetwork as nn
+from neuralbinder.deepomics import utils, fit
+
+
+#Ensuring whether the right number of arguments are being passed with the script
+#set default args as -h , if no args:
+if len(sys.argv) == 1: 
+	sys.argv[1:] = ["-h"]
+        print("Wrong number of arguments entered")
+
+parser = argparse.ArgumentParser(prog='affinitybinder_rnacompete_train')
+
+parser.add_argument('-e', action='store', dest='epochnumber', type=int,
+                    help='Number of epochs for training. Default = 200.', default=200)
+
+parser.add_argument('-b', action='store', dest='batchsize', type=int, 
+                    help='Batch size used for training. Default = 100', default=100)
+
+parser.add_argument('-m', action='store', dest='models',  nargs='+',
+                    help='Neural network models that will be used for training. Currently there are three models supported by the package:\n 1. affinity_residualbind \n 2. affinity_conv_net \n 3.affinity_all_conv_net \n. Default = all three', default='all')
+
+parser.add_argument('-n', action='store', dest='norm',
+                    help='Type of data normalization method to use: \n 1. clip_norm (CLIP normalization) \n 2. log_norm (Log normalization) \n Default = log_norm', default='log_norm')
+
+parser.add_argument('-d', action='store', dest='data', required=True,
+                    help='Input RNAcompete data that will be used. Download the hdf5 from the website.')
+
+parser.add_argument('-o', action='store', dest='output_dir', required=True,
+                    help='Directory to store the models generated for each experiment.')
+
+parser.add_argument('-ss', action='store', dest='secondary_structures', nargs='+',
+                    help='Secondary structure to be used for the model')
+
+inputs = parser.parse_args()
+
+
+experiments = helper.get_experiments_hdf5(inputs.data)
+print(experiments)
+
+
+
+
+# Crosschecking the number of models specified
+all_models = ['affinity_residualbind','affinity_conv_net','affinity_all_conv_net']
+
+for model in inputs.models:
+    if i not in all_models:
+       raise NameError("Sorry " + str(model) + " currently not present in neuralbinder.")
+       sys.exit(1)
+

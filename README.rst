@@ -2,6 +2,17 @@
 neuralbinder
 ==========
 
+::
+        
+	                             _ _     _           _           
+	                            | | |   (_)         | |          
+	  _ __   ___ _   _ _ __ __ _| | |__  _ _ __   __| | ___ _ __ 
+	 | '_ \ / _ \ | | | '__/ _` | | '_ \| | '_ \ / _` |/ _ \ '__|
+	 | | | |  __/ |_| | | | (_| | | |_) | | | | | (_| |  __/ |   
+	 |_| |_|\___|\__,_|_|  \__,_|_|_.__/|_|_| |_|\__,_|\___|_|   
+
+
+
 neuralbinder is a package to analyze the RNAbinding protein (RBP) specificity using datasets generated from high-throughput experiments.
 
 
@@ -33,17 +44,17 @@ convnet, all_convnet and residualbind models.
 ============================      ==================
 Script                            Description
 ============================      ==================
-nb_rnacompete_train               Train on all the RNAcompete datasets
+affinitybinder_train               Train on all the RNAcompete datasets
                                   
-nb_rnacompete_test		  Evaluate the performance of pre-trained model 
+affinitybinder_test		  Evaluate the performance of pre-trained model 
                                   on test dataset derived from RNACompete experiment
 
 nb_saliency_plot                  Given a model, saliency plot is generated for a 
                                   requested sequence from test dataset
 
-nb_clip_train                     Train on a given clip dataset
+clipbinder_train                     Train on a given clip dataset
 
-nb_clip_test			  Evaluate the performance of pre-trained model on 
+clipbinder_test			  Evaluate the performance of pre-trained model on 
                                   a given test dataset derived from CLIP experiment
 ============================      ==================
 
@@ -115,4 +126,6 @@ Please cite us so we can continue to make useful software! ::
 
 License
 -------
-**neuralbinder** is distributed under the MIT license, see LICENSE.
+**neuralbinder** is distributed under the MIT license, see `LICENSE`_.
+
+.. _LICENSE: https://raw.githubusercontent.com/p-anand/neuralbinder/master/LICENSE#hyperlink-targets

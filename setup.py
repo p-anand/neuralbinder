@@ -21,7 +21,7 @@ setup(
     version='0.1.1',
 
     description='NeuralBinder consists of a bunch of routines to build and train neural network models, primarily using deepomics, which is a high-level tensorflow API for biological applications.',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
 
     # The project's main homepage.
     url='https://github.com/p-anand/neuralbinder',
@@ -78,6 +78,9 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
 
+    # Scripts that will be included in the bin directory
+    scripts = ['neuralbinder/bin/affinitybinder_rnacompete_train'],
+
     # What does your project relate to?
     keywords='Deeplearning RNAprotein Motifs Saliency Bioinformatics',
 
@@ -102,7 +105,7 @@ setup(
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     # https://stackoverflow.com/questions/5897666/how-do-i-use-data-in-package-data-from-source-code
-    package_data={
-        'neuralbinder': ['datasets/*.h5'],
-    },
+    #package_data={
+    #    'neuralbinder': ['datasets/*.h5'],
+    #},
 )
