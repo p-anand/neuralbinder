@@ -129,9 +129,9 @@
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/neuralbinder/neuralbindhelpers/helper.pyc
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/neuralbinder/neuralbindhelpers/plot_helper.py
 /usr/local/lib/python2.7/site-packages/neuralbinder-0.1.1-py2.7.egg/neuralbinder/neuralbindhelpers/plot_helper.pyc
-/usr/local/Cellar/python/2.7.13/Frameworks/Python.framework/Versions/2.7/bin/affinitybinder_rnacompete_train
-/usr/local/Cellar/python/2.7.13/Frameworks/Python.framework/Versions/2.7/bin/tensorboard
-/usr/local/Cellar/python/2.7.13/Frameworks/Python.framework/Versions/2.7/bin/wheel
-/usr/local/Cellar/python/2.7.13/Frameworks/Python.framework/Versions/2.7/bin/pbr
-/usr/local/Cellar/python/2.7.13/Frameworks/Python.framework/Versions/2.7/bin/easy_install
-/usr/local/Cellar/python/2.7.13/Frameworks/Python.framework/Versions/2.7/bin/easy_install-3.6
+/usr/local/bin/affinitybinder_rnacompete_train
+/usr/local/bin/tensorboard
+/usr/local/bin/wheel
+/usr/local/bin/pbr
+/usr/local/bin/easy_install
+/usr/local/bin/easy_install-3.6

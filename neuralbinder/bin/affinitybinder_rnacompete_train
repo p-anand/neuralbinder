@@ -34,6 +34,9 @@ if len(sys.argv) == 1:
 
 parser = argparse.ArgumentParser(prog='affinitybinder_rnacompete_train')
 
+parser.add_argument('-t',action='store', dest = 'training_type', required=True,
+                   help='Type of training. One can either train a single RBP by specifying ID within range \'0-244\' or \'all\' at once.')
+
 parser.add_argument('-e', action='store', dest='epochnumber', type=int,
                     help='Number of epochs for training. Default = 200.', default=200)
 
@@ -72,3 +75,4 @@ for model in inputs.models:
        raise NameError("Sorry " + str(model) + " currently not present in neuralbinder.")
        sys.exit(1)
 
+# Specifying the number 
