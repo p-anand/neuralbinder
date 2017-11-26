@@ -7,7 +7,7 @@ experiments. More details about how the input file for this script was generated
 input file required for this script can also be downloaded from the website directly.
 
 Summary: Train deep learning models on RNAcompete_2013 datasets with
-sequence + secondary structure profiles, i.e. paired-unparied (pu) or structural
+sequence + secondary structure profiles, i.e. paired-unpaired (pu) or structural
 profiles (struct).
 #######################################################################################################################
 """
@@ -32,7 +32,7 @@ if len(sys.argv) == 1:
     sys.argv[1:] = ["-h"]
     print("Wrong number of arguments entered")
 
-parser = argparse.ArgumentParser(prog='affinitybinder_rnacompete_train')
+parser = argparse.ArgumentParser(prog='affinitybinder_rnacompete2013_train')
 
 parser.add_argument('-r',action='store', dest = 'training_type', required=True, nargs='+',
                     help='Specify RNACPMT experimental ID to train. If you want to train all at once, type = \'all\' here')
